@@ -146,4 +146,26 @@ describe('Connection Manager', () => {
       });
   });
 
+  it('should clear the pool after draining it', () => {
+    const options = {
+      replication: {
+        write: _.clone(poolEntry),
+        read: [_.clone(poolEntry), _.clone(poolEntry)]
+      }
+    };
+    const sequelize = Support.createSequelizeInstance(options);
+    const connectionManager = new ConnectionManager(Support.getTestDialect(), sequelize);
+
+    connectionManager.initPools();
+
+    const poolDrainSpy = sandbox.spy(connectionManager.pool, 'drain');
+    const poolClearSpy = sandbox.spy(connectionManager.pool, 'clear');
+
+    connectionManager.close();
+
+    expect(poolDrainSpy.calledOnce).to.be.true;
+    expect(poolClearSpy.calledOnce).to.be.true;
+    console.log('aodsangiaslgbaslbgl');
+  });
+
 });
